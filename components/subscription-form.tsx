@@ -46,7 +46,9 @@ export function SubscriptionForm() {
 
   const toastTitle = useMemo(() => {
     if (!toastState) return ""
-    return toastState.status === "success" ? "Subscription confirmed" : "Let\u2019s try that again"
+    return toastState.status === "success"
+      ? "Подписка подтверждена"
+      : "Попробуем ещё раз"
   }, [toastState])
 
   return (
@@ -57,12 +59,12 @@ export function SubscriptionForm() {
         className="flex w-full flex-col gap-4 sm:flex-row"
       >
         <div className="w-full sm:max-w-xs">
-          <Label htmlFor="email">Email address</Label>
+          <Label htmlFor="email">Электронная почта</Label>
           <Input
             id="email"
             name="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder="ivan@example.com"
             autoComplete="email"
             required
             aria-invalid={state.status === "error"}
@@ -71,11 +73,11 @@ export function SubscriptionForm() {
           />
         </div>
         <Button type="submit" disabled={pending} className="sm:self-end">
-          {pending ? "Subscribing..." : "Notify me"}
+          {pending ? "Отправляем..." : "Сообщите мне"}
         </Button>
       </form>
       <p id="email-help" className="text-sm text-muted-foreground">
-        Join the waitlist to hear when courses launch.
+        Запишитесь в лист ожидания и узнайте первыми о запуске курсов.
       </p>
       {isMounted && toastState
         ? createPortal(

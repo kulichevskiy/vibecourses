@@ -19,7 +19,7 @@ export async function subscribe(
   if (typeof rawEmail !== "string" || rawEmail.trim().length === 0) {
     return {
       status: "error",
-      message: "Please enter an email address before subscribing.",
+      message: "Укажите адрес электронной почты, чтобы оформить подписку.",
     }
   }
 
@@ -28,7 +28,7 @@ export async function subscribe(
   if (!EMAIL_REGEX.test(email)) {
     return {
       status: "error",
-      message: "That doesn\u2019t look like a valid email. Try again?",
+      message: "Похоже, адрес введён неверно. Попробуйте ещё раз.",
     }
   }
 
@@ -42,18 +42,18 @@ export async function subscribe(
     if (error.code === "23505") {
       return {
         status: "error",
-        message: "You\u2019re already on the list. Stay tuned!",
+        message: "Вы уже в списке. Скоро свяжемся!",
       }
     }
 
     return {
       status: "error",
-      message: "Something went wrong on our side. Please try again soon.",
+      message: "Что-то пошло не так на нашей стороне. Повторите попытку позже.",
     }
   }
 
   return {
     status: "success",
-    message: "You\u2019re in! We\u2019ll email you as soon as VibeCourses is live.",
+    message: "Вы в деле! Мы напишем вам, как только Вайбкурсы откроются.",
   }
 }

@@ -8,8 +8,9 @@ create table if not exists public.email_subscribers (
 
 alter table public.email_subscribers enable row level security;
 
-create policy if not exists "Allow anonymous inserts" on public.email_subscribers
+drop policy if exists "Allow anonymous inserts" on public.email_subscribers;
+
+create policy "Allow anonymous inserts" on public.email_subscribers
 for insert
 to anon
-using (true)
 with check (true);

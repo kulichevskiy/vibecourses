@@ -1,0 +1,101 @@
+"use client"
+
+import { useActionState, useEffect, useMemo, useRef, useState } from "react"
+
+import { subscribe, type SubscriptionFormState } from "@/app/actions/subscribe"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
+
+const initialState: SubscriptionFormState = {
+  status: "idle",
+  message: "",
+}
+
+export function SubscriptionForm() {
+  const formRef = useRef<HTMLFormElement>(null)
+  const [state, formAction, pending] = useActionState(subscribe, initialState)
+  const [toastState, setToastState] = useState<SubscriptionFormState | null>(null)
+
+  useEffect(() => {
+    if (state.status === "idle") {
+      return
+    }
+
+    if (state.status === "success") {
+      formRef.current?.reset()
+    }
+
+    setToastState(state)
+
+    const timeout = setTimeout(() => {
+      setToastState(null)
+    }, 4000)
+
+    return () => clearTimeout(timeout)
+  }, [state])
+
+  const toastTitle = useMemo(() => {
+    if (!toastState) return ""
+    return toastState.status === "success" ? "Subscription confirmed" : "Let\u2019s try that again"
+  }, [toastState])
+
+  return (
+    <>
+      <form
+        ref={formRef}
+        action={formAction}
+        className="flex w-full flex-col gap-4 sm:flex-row"
+      >
+        <div className="w-full sm:max-w-xs">
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+            required
+            aria-invalid={state.status === "error"}
+            aria-describedby="email-help"
+            disabled={pending}
+          />
+        </div>
+        <Button type="submit" disabled={pending} className="sm:self-end">
+          {pending ? "Subscribing..." : "Notify me"}
+        </Button>
+      </form>
+      <p id="email-help" className="text-sm text-muted-foreground">
+        Join the waitlist to hear when courses launch.
+      </p>
+      {toastState ? (
+        <div className="fixed right-4 top-4 z-50 max-w-sm">
+          <Card
+            className={cn(
+              "border shadow-lg",
+              toastState.status === "success"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-950"
+                : "border-destructive/40 bg-destructive/10 text-destructive"
+            )}
+          >
+            <CardContent className="space-y-1.5 py-4">
+              <p className="text-sm font-semibold">{toastTitle}</p>
+              <p
+                className={cn(
+                  "text-sm",
+                  toastState.status === "success"
+                    ? "text-emerald-900/90 dark:text-emerald-100"
+                    : "text-destructive/80"
+                )}
+              >
+                {toastState.message}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      ) : null}
+    </>
+  )
+}

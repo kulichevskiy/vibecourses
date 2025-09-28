@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VibeCourses – Coming soon",
+  title: "Вайбкурсы — скоро открытие",
   description:
-    "Join the VibeCourses waitlist to be the first to know when our creative courses launch.",
+    "Запишитесь в лист ожидания Вайбкурсов, чтобы первыми узнать о запуске творческих программ.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

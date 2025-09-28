@@ -12,9 +12,12 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <div className="flex h-svh w-full items-center justify-center gap-2">
-      <p>
-        Hello <span>{data.claims.email}</span>
+    <div className="flex h-svh w-full flex-col items-center justify-center gap-4 text-center">
+      <p className="text-lg font-medium">
+        Привет, <span className="font-semibold">{data.claims.email}</span>!
+      </p>
+      <p className="text-muted-foreground">
+        Это закрытый раздел Вайбкурсов. Здесь появляются материалы только для участников.
       </p>
       <LogoutButton />
     </div>

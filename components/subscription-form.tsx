@@ -53,32 +53,44 @@ export function SubscriptionForm() {
 
   return (
     <>
-      <form
-        ref={formRef}
-        action={formAction}
-        className="flex w-full flex-col gap-4 sm:flex-row"
-      >
-        <div className="w-full sm:max-w-xs">
-          <Label htmlFor="email">Электронная почта</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="ivan@example.com"
-            autoComplete="email"
-            required
-            aria-invalid={state.status === "error"}
-            aria-describedby="email-help"
+      <div className="space-y-4">
+        <form
+          ref={formRef}
+          action={formAction}
+          className="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:gap-4"
+        >
+          <div className="flex-1">
+            <Label
+              htmlFor="email"
+              className="mb-1 flex-col items-start gap-1 text-left text-sm font-medium sm:mb-2"
+            >
+              Электронная почта
+            </Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="ivan@example.com"
+              autoComplete="email"
+              required
+              aria-invalid={state.status === "error"}
+              aria-describedby="email-help"
+              disabled={pending}
+              className="h-12"
+            />
+          </div>
+          <Button
+            type="submit"
             disabled={pending}
-          />
-        </div>
-        <Button type="submit" disabled={pending} className="sm:self-end">
-          {pending ? "Отправляем..." : "Сообщите мне"}
-        </Button>
-      </form>
-      <p id="email-help" className="text-sm text-muted-foreground">
-        Запишитесь в лист ожидания и узнайте первыми о запуске курсов.
-      </p>
+            className="h-12 w-full sm:w-auto"
+          >
+            {pending ? "Отправляем..." : "Сообщите мне"}
+          </Button>
+        </form>
+        <p id="email-help" className="text-sm text-muted-foreground text-center sm:text-left">
+          Запишитесь в лист ожидания и узнайте первыми о запуске курсов.
+        </p>
+      </div>
       {isMounted && toastState
         ? createPortal(
             <div className="pointer-events-none fixed inset-x-4 top-4 z-[100] flex justify-center sm:inset-x-auto sm:right-4 sm:justify-end">

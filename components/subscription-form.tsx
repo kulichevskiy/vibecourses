@@ -1,6 +1,7 @@
 "use client"
 
 import { useActionState, useEffect, useMemo, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 
 import { subscribe, type SubscriptionFormState } from "@/app/actions/subscribe"
 import { Button } from "@/components/ui/button"
@@ -18,6 +19,12 @@ export function SubscriptionForm() {
   const formRef = useRef<HTMLFormElement>(null)
   const [state, formAction, pending] = useActionState(subscribe, initialState)
   const [toastState, setToastState] = useState<SubscriptionFormState | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+    return () => setIsMounted(false)
+  }, [])
 
   useEffect(() => {
     if (state.status === "idle") {
@@ -70,32 +77,35 @@ export function SubscriptionForm() {
       <p id="email-help" className="text-sm text-muted-foreground">
         Join the waitlist to hear when courses launch.
       </p>
-      {toastState ? (
-        <div className="fixed right-4 top-4 z-50 max-w-sm">
-          <Card
-            className={cn(
-              "border shadow-lg",
-              toastState.status === "success"
-                ? "border-emerald-200 bg-emerald-50 text-emerald-950"
-                : "border-destructive/40 bg-destructive/10 text-destructive"
-            )}
-          >
-            <CardContent className="space-y-1.5 py-4">
-              <p className="text-sm font-semibold">{toastTitle}</p>
-              <p
+      {isMounted && toastState
+        ? createPortal(
+            <div className="pointer-events-none fixed inset-x-4 top-4 z-[100] flex justify-center sm:inset-x-auto sm:right-4 sm:justify-end">
+              <Card
                 className={cn(
-                  "text-sm",
+                  "pointer-events-auto border shadow-lg",
                   toastState.status === "success"
-                    ? "text-emerald-900/90 dark:text-emerald-100"
-                    : "text-destructive/80"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-950"
+                    : "border-destructive/40 bg-destructive/10 text-destructive"
                 )}
               >
-                {toastState.message}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      ) : null}
+                <CardContent className="space-y-1.5 py-4">
+                  <p className="text-sm font-semibold">{toastTitle}</p>
+                  <p
+                    className={cn(
+                      "text-sm",
+                      toastState.status === "success"
+                        ? "text-emerald-900/90 dark:text-emerald-100"
+                        : "text-destructive/80"
+                    )}
+                  >
+                    {toastState.message}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>,
+            document.body
+          )
+        : null}
     </>
   )
 }
